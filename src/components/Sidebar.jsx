@@ -19,7 +19,7 @@ export default function Sidebar({
           id="question-search"
           className="search-input"
           type="search"
-          placeholder="Search questions, tags…"
+          placeholder="Search questions, tags… ( / )"
           value={search}
           onChange={(e) => onSearch(e.target.value)}
         />

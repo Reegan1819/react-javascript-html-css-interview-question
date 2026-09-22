@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { CATEGORIES, QUESTIONS } from './data/questions.js'
 import { useProgress } from './hooks/useProgress.js'
+import { useLocalStorage } from './hooks/useLocalStorage.js'
+import { useDebounce } from './hooks/useDebounce.js'
+import { useKeyboardShortcut } from './hooks/useKeyboardShortcut.js'
 import Topbar from './components/Header.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import QuestionCard from './components/QuestionCard.jsx'
@@ -8,16 +11,26 @@ import QuestionCard from './components/QuestionCard.jsx'
 export default function App() {
   const { progress, setStatus, resetProgress } = useProgress()
   const [search, setSearch] = useState('')
-  const [activeCategories, setActiveCategories] = useState([])
-  const [difficulty, setDifficulty] = useState('All')
+  const [activeCategories, setActiveCategories] = useLocalStorage('interview-bench-categories', [])
+  const [difficulty, setDifficulty] = useLocalStorage('interview-bench-difficulty', 'All')
   const [openId, setOpenId] = useState(null)
+
+  const debouncedSearch = useDebounce(search, 200)
+
+  useKeyboardShortcut({
+    '/': (event) => {
+      event.preventDefault()
+      document.getElementById('question-search')?.focus()
+    },
+    Escape: () => setOpenId(null),
+  })
 
   const toggleCategory = (cat) => {
     setActiveCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]))
   }
 
   const filtered = useMemo(() => {
-    const term = search.trim().toLowerCase()
+    const term = debouncedSearch.trim().toLowerCase()
     return QUESTIONS.filter((item) => {
       if (activeCategories.length && !activeCategories.includes(item.category)) return false
       if (difficulty !== 'All' && item.difficulty !== difficulty) return false
@@ -28,7 +41,7 @@ export default function App() {
         item.tags.some((t) => t.toLowerCase().includes(term))
       )
     })
-  }, [search, activeCategories, difficulty])
+  }, [debouncedSearch, activeCategories, difficulty])
 
   const categoryCounts = useMemo(() => {
     const counts = {}
