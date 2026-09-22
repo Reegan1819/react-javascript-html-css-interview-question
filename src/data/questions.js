@@ -8,7 +8,7 @@ const q = (category, difficulty, question, answer, tags) => ({
   tags,
 })
 
-export const CATEGORIES = ['JavaScript', 'React', 'System Design', 'CS Fundamentals', 'Behavioral']
+export const CATEGORIES = ['JavaScript', 'React', 'Redux', 'System Design', 'CS Fundamentals', 'Behavioral']
 export const DIFFICULTIES = ['Easy', 'Medium', 'Hard']
 
 export const QUESTIONS = [
@@ -73,6 +73,37 @@ export const QUESTIONS = [
     'A common mistake is passing a new object literal as the value on every render — split state into multiple contexts by concern, or memoize the value object.',
     'For frequently changing, widely consumed state, a dedicated state library (or colocating state closer to where it’s used) often scales better than one large context.',
   ], ['context', 'performance']),
+
+  q('Redux', 'Easy', 'What are the three core principles of Redux?', [
+    'Single source of truth — the entire application state lives in one store tree.',
+    'State is read-only — the only way to change it is to dispatch an action describing what happened.',
+    'Changes are made with pure functions — reducers take the previous state and an action and return a new state, without mutating the original.',
+  ], ['fundamentals', 'principles']),
+  q('Redux', 'Medium', 'What is the role of a reducer, and why must it be a pure function?', [
+    'A reducer is `(state, action) => newState` — it computes the next state from the current state and an action, and nothing else.',
+    'Purity (no side effects, no mutation, deterministic output for the same inputs) is what makes state predictable, time-travel debugging possible, and change detection cheap (reference equality).',
+    'Mutating state directly inside a reducer breaks that reference-equality check, so connected components silently fail to re-render.',
+  ], ['reducers', 'immutability']),
+  q('Redux', 'Medium', 'Why do you need middleware like `redux-thunk` for async logic?', [
+    'A plain Redux `dispatch` only accepts a plain action object — reducers must stay synchronous and pure, so they can’t make API calls themselves.',
+    '`redux-thunk` lets `dispatch` also accept a function; Redux calls that function with `(dispatch, getState)`, so it can run async work and dispatch plain actions once it resolves.',
+    'Alternatives like `redux-saga` (generator-based side-effect management) or RTK Query solve the same problem with different trade-offs around testability and complexity.',
+  ], ['middleware', 'async']),
+  q('Redux', 'Medium', 'How do `useSelector` and `useDispatch` compare to the older `connect()` API?', [
+    '`connect()` is a higher-order component that maps state/dispatch to props via `mapStateToProps`/`mapDispatchToProps`, wrapping your component.',
+    '`useSelector(selectorFn)` and `useDispatch()` are hooks that read from and dispatch to the store directly inside a function component — no wrapping HOC, less boilerplate.',
+    '`useSelector` re-renders the component whenever the selected slice changes (by strict equality by default), so selectors should return the smallest, most stable value they can.',
+  ], ['hooks', 'react-redux']),
+  q('Redux', 'Hard', 'What problem does Redux Toolkit’s `createSlice` solve compared to hand-written Redux?', [
+    'Hand-written Redux needs separate action types, action creators, and a switch-statement reducer per feature — a lot of repetitive boilerplate.',
+    '`createSlice` generates action creators and action types from a single object of reducer functions, and lets you "mutate" state inside them because it uses Immer under the hood to produce an immutable update.',
+    'It also nudges toward Redux Toolkit’s other defaults (a preconfigured store with thunk and DevTools, `createAsyncThunk` for async logic) that used to require manual setup.',
+  ], ['redux-toolkit', 'immer']),
+  q('Redux', 'Hard', 'When would you choose Redux over React Context + `useReducer`, or vice versa?', [
+    'Context + `useReducer` is enough for state that’s localized to a feature or subtree, changes infrequently, and doesn’t need tooling like time-travel debugging.',
+    'Redux earns its cost at larger scale: cross-cutting state touched by many distant components, a need for middleware (logging, async orchestration), or strong dev-tooling requirements (action history, replay).',
+    'A common progression is to start with local state or Context, and reach for Redux only once prop-drilling or ad hoc context providers become the actual bottleneck.',
+  ], ['architecture', 'trade-offs']),
 
   q('System Design', 'Medium', 'How would you design a URL shortener?', [
     'Core write path: generate a short code (base62 counter, or hash + collision check) and store `{code -> long_url}` in a key-value store for O(1) lookups.',

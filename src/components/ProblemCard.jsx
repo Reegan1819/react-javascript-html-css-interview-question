@@ -9,7 +9,7 @@ export default function ProblemCard({ item, isOpen, status, onToggle, onSetStatu
       >
         <span className={`status-dot${status ? ` ${status}` : ''}`} aria-hidden="true" />
         <div className="card-badges">
-          <span className={`badge track-${item.track === 'React' ? 'react' : 'javascript'}`}>{item.track}</span>
+          <span className={`badge track-${item.track.toLowerCase()}`}>{item.track}</span>
           <span className={`badge difficulty-${item.difficulty.toLowerCase()}`}>{item.difficulty}</span>
         </div>
         <span className="card-question">{item.title}</span>

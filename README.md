@@ -9,9 +9,10 @@ A React app for practicing experienced-level interviews, with two modes:
 
 - **Concept Q&A** — filter by category and difficulty, search, expand a question to
   reveal its answer, and mark yourself "know it" / "still shaky" per question.
-- **Problem Solving** — hands-on JavaScript and React coding problems (debounce,
-  deep clone, custom hooks, accessible components, and more), each with a prompt,
-  a worked approach, and a full solution, tracked as "solved" / "needs practice".
+- **Problem Solving** — hands-on JavaScript, React, and Redux coding problems (debounce,
+  deep clone, custom hooks, accessible components, a from-scratch `createStore`, and
+  more), each with a prompt, a worked approach, and a full solution, tracked as
+  "solved" / "needs practice".
 
 Progress in both modes is saved to `localStorage`.
 
@@ -37,8 +38,9 @@ Then open the printed local URL in your browser.
 
 ## Structure
 
-- `src/data/questions.js` — concept Q&A bank
-- `src/data/problems.js` — coding problem bank (JavaScript + React tracks)
+- `src/data/questions.js` — concept Q&A bank (JavaScript, React, Redux, System Design,
+  CS Fundamentals, Behavioral)
+- `src/data/problems.js` — coding problem bank (JavaScript, React, and Redux tracks)
 - `src/hooks/`
   - `useProgress.js` — localStorage-backed "know it / still shaky" tracking per question
   - `useLocalStorage.js` — generic localStorage-backed state; used to remember your

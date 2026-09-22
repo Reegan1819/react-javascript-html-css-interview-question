@@ -15,6 +15,8 @@
   --warn-soft: #fbeddc;
   --bad: #c4483a;
   --bad-soft: #faeae8;
+  --redux: #7645d9;
+  --redux-soft: #efe9fb;
   --shadow: 0 1px 2px rgba(23, 27, 33, 0.06), 0 8px 24px -12px rgba(23, 27, 33, 0.15);
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -39,6 +41,8 @@
     --warn-soft: #2d2415;
     --bad: #e27568;
     --bad-soft: #2c1a18;
+    --redux: #b79cf0;
+    --redux-soft: #291f42;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
   }
 }
@@ -60,6 +64,8 @@
   --warn-soft: #2d2415;
   --bad: #e27568;
   --bad-soft: #2c1a18;
+  --redux: #b79cf0;
+  --redux-soft: #291f42;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
 }
 
@@ -499,6 +505,11 @@ button:focus-visible {
 .badge.track-react {
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+.badge.track-redux {
+  background: var(--redux-soft);
+  color: var(--redux);
 }
 
 .badge.difficulty-easy {

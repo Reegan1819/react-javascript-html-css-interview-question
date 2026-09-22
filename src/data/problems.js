@@ -11,7 +11,7 @@ const p = (track, difficulty, title, prompt, examples, approach, solution, tags)
   tags,
 })
 
-export const TRACKS = ['JavaScript', 'React']
+export const TRACKS = ['JavaScript', 'React', 'Redux']
 
 export const PROBLEMS = [
   p(
@@ -378,4 +378,95 @@ function FilterableList({ items }) {
 }`,
     ['performance', 'memoization'],
   ),
+
+  p(
+    'Redux',
+    'Hard',
+    'Implement `createStore` from scratch',
+    'Recreate the core of Redux’s `createStore`: `getState`, `dispatch`, and `subscribe`, without any external library.',
+    [
+      'const store = createStore(reducer); store.subscribe(() => console.log(store.getState())); store.dispatch({ type: "INCREMENT" });',
+    ],
+    [
+      'Keep the current state in a closure variable, seeded by dispatching a dummy `@@INIT` action through the reducer so any default state is set up front.',
+      '`dispatch` calls the reducer with the current state and the action, replaces the closure state with the result, then notifies every subscriber — this is the entire update cycle.',
+      '`subscribe` just appends a listener function to an array and returns an unsubscribe function that removes it, so components can stop listening on unmount.',
+    ],
+    `function createStore(reducer, preloadedState) {
+  let state = preloadedState;
+  let listeners = [];
+
+  function getState() {
+    return state;
+  }
+
+  function dispatch(action) {
+    state = reducer(state, action);
+    listeners.forEach((listener) => listener());
+    return action;
+  }
+
+  function subscribe(listener) {
+    listeners.push(listener);
+    return function unsubscribe() {
+      listeners = listeners.filter((l) => l !== listener);
+    };
+  }
+
+  dispatch({ type: '@@INIT' });
+  return { getState, dispatch, subscribe };
+}`,
+    ['store', 'internals'],
+  ),
+  p(
+    'Redux',
+    'Medium',
+    'Implement `combineReducers`',
+    'Given an object of slice reducers (e.g. `{ user: userReducer, cart: cartReducer }`), return one root reducer that manages a matching shaped state object.',
+    [
+      'combineReducers({ count: countReducer, user: userReducer })(state, action) → { count: ..., user: ... }',
+    ],
+    [
+      'The returned root reducer receives the *whole* state tree and the action, and must call each slice reducer with only its own slice.',
+      'Build the next state by mapping over the reducer keys, calling `sliceReducers[key](state[key], action)` for each, and assembling the results into a new object.',
+      'Every slice reducer runs on every dispatched action — each one simply ignores actions it doesn’t recognize by returning its current state unchanged (the `default` case).',
+    ],
+    `function combineReducers(sliceReducers) {
+  const keys = Object.keys(sliceReducers);
+
+  return function rootReducer(state = {}, action) {
+    const nextState = {};
+    for (const key of keys) {
+      nextState[key] = sliceReducers[key](state[key], action);
+    }
+    return nextState;
+  };
+}`,
+    ['store', 'composition'],
+  ),
+  p(
+    'Redux',
+    'Medium',
+    'Write a logging middleware',
+    'Implement a Redux middleware that logs the action type, the previous state, and the next state for every dispatch — the classic "hello world" of Redux middleware.',
+    [
+      'const store = createStore(reducer, applyMiddleware(logger)); store.dispatch({ type: "ADD" }); // logs prev/action/next',
+    ],
+    [
+      'Redux middleware has the signature `store => next => action => { ... }` — three nested functions, each supplying one piece of context.',
+      '`store` gives access to `getState()` (and `dispatch`, for middleware that re-dispatches); `next` is the next middleware in the chain (or the real `dispatch` at the end); `action` is the dispatched action.',
+      'Log state via `store.getState()` before calling `next(action)`, then log it again after — that "before/after" call to `next` is what lets middleware observe the effect of the reducer.',
+    ],
+    `const logger = (store) => (next) => (action) => {
+  console.log('prev state', store.getState());
+  console.log('action', action);
+
+  const result = next(action);
+
+  console.log('next state', store.getState());
+  return result;
+};`,
+    ['middleware', 'debugging'],
+  ),
 ]
+
