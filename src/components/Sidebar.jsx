@@ -10,6 +10,7 @@ export default function Sidebar({
   categoryCounts,
   stats,
   onJumpToUnreviewed,
+  onReset,
 }) {
   return (
     <aside className="sidebar">
@@ -77,6 +78,9 @@ export default function Sidebar({
         </div>
         <button type="button" className="jump-btn" onClick={onJumpToUnreviewed}>
           Jump to next unreviewed
+        </button>
+        <button type="button" className="reset-btn" onClick={onReset}>
+          Reset progress
         </button>
       </div>
     </aside>

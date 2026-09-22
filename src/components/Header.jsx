@@ -1,8 +1,4 @@
-export default function Topbar({ total, confidentCount, shakyCount, onReset }) {
-  const confidentPct = total ? (confidentCount / total) * 100 : 0
-  const shakyPct = total ? (shakyCount / total) * 100 : 0
-  const reviewedCount = confidentCount + shakyCount
-
+export default function Topbar({ view, onChangeView }) {
   return (
     <header className="topbar">
       <div className="brand">
@@ -10,26 +6,24 @@ export default function Topbar({ total, confidentCount, shakyCount, onReset }) {
         <span className="brand-tag">Q&amp;A PRACTICE</span>
       </div>
 
-      <div className="topbar-progress">
-        <div
-          className="progress-track"
-          role="progressbar"
-          aria-valuenow={reviewedCount}
-          aria-valuemin={0}
-          aria-valuemax={total}
-          aria-label="Review progress"
+      <nav className="tabs" aria-label="Practice mode">
+        <button
+          type="button"
+          className={view === 'qa' ? 'active' : ''}
+          onClick={() => onChangeView('qa')}
+          aria-pressed={view === 'qa'}
         >
-          <div className="progress-fill-confident" style={{ width: `${confidentPct}%` }} />
-          <div className="progress-fill-shaky" style={{ width: `${shakyPct}%` }} />
-        </div>
-        <span className="progress-label">
-          {reviewedCount}/{total} reviewed
-        </span>
-      </div>
-
-      <button className="reset-btn" onClick={onReset} type="button">
-        Reset progress
-      </button>
+          Concept Q&amp;A
+        </button>
+        <button
+          type="button"
+          className={view === 'problems' ? 'active' : ''}
+          onClick={() => onChangeView('problems')}
+          aria-pressed={view === 'problems'}
+        >
+          Problem Solving
+        </button>
+      </nav>
     </header>
   )
 }
